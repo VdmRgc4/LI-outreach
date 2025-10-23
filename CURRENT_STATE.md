@@ -1,7 +1,7 @@
 # LinkedIn Outreach Automation - Project State
 
 ## Last Updated
-2025-10-23 - Phase 1 Complete
+2025-10-23 - Phase 2 Complete
 
 ## What's Working
 - ✅ .claudeignore file (prevents 60% context waste)
@@ -10,14 +10,15 @@
 - ✅ Configuration management (config.py)
 - ✅ Main entry point (main.py - orchestration only)
 - ✅ Sample CSV generation
-- ❌ Company intelligence module (not implemented yet)
+- ✅ Company intelligence module (modules/company_intel.py)
 - ❌ Person intelligence module (not implemented yet)
 - ❌ Message generation (not implemented yet)
 - ❌ Full integration (not implemented yet)
 
 ## Current Phase
 **Phase 1: COMPLETE** - Project Setup & CSV Handler
-**Next: Phase 2** - Company Intelligence Module
+**Phase 2: COMPLETE** - Company Intelligence Module
+**Next: Phase 3** - Person Intelligence Module
 
 ## Critical Decisions Made
 
@@ -67,9 +68,9 @@
 - create_sample_input_csv(file_path: str) -> None
 ```
 
-### company_intel.py (NOT YET IMPLEMENTED - Phase 2)
+### company_intel.py (COMPLETE - Phase 2)
 ```python
-# Input: company_name (string)
+# Input: company_name (string), optional company_url (string)
 # Output: dictionary
 
 {
@@ -84,6 +85,29 @@
     "ai_crawlers_blocked": List[str],
     "confidence": int
 }
+
+# Functions:
+- find_company_website(company_name: str) -> Optional[str]
+  - Strategy 1: Try common domain patterns (.com, .io, with/without www)
+  - Strategy 2: Fallback to search if patterns fail
+  - Returns working URL or None
+
+- scrape_homepage(url: str) -> Dict
+  - Extracts value prop, trust signals, H1 headings, meta description
+  - Checks for blog/resources presence
+  - Handles anti-bot protection gracefully (returns empty data)
+
+- check_robots_txt(url: str) -> List[str]
+  - Checks for AI crawler blocking (GPTBot, ClaudeBot, CCBot, etc.)
+  - Returns list of blocked crawlers
+
+- calculate_geo_readiness_score(homepage_data, blocked_crawlers, url) -> int
+  - Scores 0-10 based on AI crawler access, content structure, blog presence
+
+- get_company_intel(company_name: str, company_url: Optional[str]) -> Dict
+  - Main orchestration function
+  - Calls all sub-functions with rate limiting
+  - Returns complete intelligence package
 ```
 
 ### person_intel.py (NOT YET IMPLEMENTED - Phase 3)
@@ -116,31 +140,33 @@
 
 ## Do Not Modify
 - ✅ csv_handler.py (tested and working)
+- ✅ company_intel.py (Phase 2 complete - working)
 - ✅ config.py (settings locked for now)
 - ✅ .claudeignore (critical for context management)
 - ✅ main.py (just orchestration, will update in Phase 5)
 
-## Next Steps (Phase 2)
+## Next Steps (Phase 3)
 
-1. Create modules/company_intel.py with these functions:
-   - `find_company_website(company_name: str) -> str`
-   - `scrape_homepage(url: str) -> Dict`
-   - `check_robots_txt(url: str) -> List[str]`
-   - `get_company_intel(company_name: str) -> Dict` (main function)
+1. Create modules/person_intel.py with these functions:
+   - `search_person_background(first_name, last_name, company_name) -> Dict`
+   - `identify_career_pattern(background_data) -> str`
+   - `get_person_intel(first_name, last_name, company_name, title) -> Dict` (main function)
 
 2. Implementation requirements:
-   - Use requests + BeautifulSoup for scraping
-   - 2-second delay between requests
-   - Handle errors gracefully (return low confidence if site unavailable)
-   - Check robots.txt for AI crawler access
-   - Return structured data matching interface above
+   - Use web search to find person information
+   - Look for recent activity, articles, interviews
+   - Identify career pattern (builder/optimizer/turnaround)
+   - Assess communication style (data-driven/narrative-driven)
+   - Return structured data matching interface in CURRENT_STATE.md
 
-3. Test with sample company names
+3. Test with sample names
 
-4. Commit Phase 2 when complete
+4. Commit Phase 3 when complete
 
 ## Known Issues
-- None yet (Phase 1 only)
+- Some websites (like Stripe) have anti-bot protection that blocks scraping - module handles this gracefully
+- External search may be rate-limited - fallback to domain pattern matching works well
+- In production, consider using a proxy service or API for more reliable scraping
 
 ## Dependencies Installed
 ```
@@ -196,9 +222,9 @@ linkedin-outreach-automation/
 ├── config.py              ✅ Complete
 ├── main.py                ✅ Complete (Phase 1 version)
 ├── modules/
-│   ├── csv_handler.py     ✅ Complete & Tested
-│   ├── company_intel.py   ⏳ Next (Phase 2)
-│   ├── person_intel.py    🔜 Future (Phase 3)
+│   ├── csv_handler.py     ✅ Complete & Tested (Phase 1)
+│   ├── company_intel.py   ✅ Complete & Tested (Phase 2)
+│   ├── person_intel.py    ⏳ Next (Phase 3)
 │   └── message_gen.py     🔜 Future (Phase 4)
 └── output/                ✅ Directory created
 ```
@@ -232,6 +258,9 @@ git push -u origin claude/linkedin-outreach-automation-011CUQQwBAuikVZP8QwRGoNV
 ```
 
 ## Notes
-- Phase 1 completed successfully in single session
-- Context management strategy working well
-- Ready to proceed with Phase 2: Company Intelligence
+- Phase 1 completed successfully (Project setup, CSV I/O)
+- Phase 2 completed successfully (Company intelligence module)
+- Context management strategy working well - no compaction issues
+- Modular architecture proving effective for focused development
+- Error handling working as designed (graceful degradation)
+- Ready to proceed with Phase 3: Person Intelligence module
