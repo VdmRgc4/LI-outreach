@@ -1,0 +1,2 @@
+first_name,last_name,linkedin_url,company_name,company_url,title,industry,subject_line,message_body,hook_type,key_insights,competitive_intel,technical_gaps,geo_readiness_score,confidence_score,audit_date,processing_time_seconds
+John,Doe,https://www.linkedin.com/in/sample-profile-1,Acme Corp,,VP of Marketing,B2B SaaS,,,,,,,0,0,2025-10-23T16:25:52.267008,4.12
