@@ -1,0 +1,65 @@
+# Build artifacts and dependencies - CRITICAL to exclude
+node_modules/
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# IDE and system files - waste context
+.vscode/
+.idea/
+*.swp
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+
+# Lock files - thousands of lines Claude doesn't need
+poetry.lock
+Pipfile.lock
+package-lock.json
+yarn.lock
+
+# Test files - exclude unless actively debugging tests
+tests/
+*_test.py
+test_*.py
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Documentation - exclude unless working on docs
+docs/
+*.md
+!README.md  # Keep README for context
+!CURRENT_STATE.md  # Keep state tracking
+
+# Output and data files - generated content
+output/
+*.csv
+*.json
+*.log
+*.tmp
+
+# Environment and secrets
+.env
+.env.*
+*.key
+*.pem
+secrets/
+
+# Git files
+.git/
+.gitignore
+.gitattributes
+
+# Cache directories
+.cache/
+*.cache
